@@ -1,6 +1,6 @@
 from flask import render_template, request
 
-from note import app
+from note import app, db_ref
 from note.signup import Signup
 from firebase_admin import auth
 
@@ -24,7 +24,20 @@ def signup():
         print(username, password, email)
         if signup.validate_on_submit:
             try:
+                db_updater = {
+                    "user": {
+                        "username": username,
+                        "email": email,
+                        "notes":{
+                            "title":"",
+                            "description":"",
+                            "time_of_creation":""
+                        }
+                    }                    
+                }
                 user = auth.create_user(email=email, password=password)
+                db_ref.push(db_updater)
+
             except Exception as e:
                 print(e)
 
