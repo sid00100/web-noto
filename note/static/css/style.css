@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+:root {
+    --first-color: #131a1d;
+    --primary-color: #2F4550;
+    --primarylight-color:#586F7C;
+    --secondary-color: #F7F7F7;
+    --tertiary-color: #EFEFEF;
+
+  }
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: 'Nunito', sans-serif;
+    background: var(--first-color);
+    margin: 0;  
+}
+.wrapper{
+    margin: 50px;
+    padding: 0 auto;
+    display: grid;
+    justify-content:center;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fill, 265px);
+}
+.wrapper > div{
+    height: 300px;
+    background:var(--secondary-color);
+    border-radius:10px;
+    padding:15px 20px 20px ;
+}
+.wrapper .note{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.add-box, .icon{
+    display:flex;
+    align-items:center;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+}
+.add-box .icon:hover{
+    height:90px;
+    width:90px ;
+    font-size: 90px; 
+    rotate: 90deg;
+}
+.bottom-content{
+   padding-top: 5px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+
+}
+.add-box .icon{
+    transition: all 0.7s ease;
+    height:70px;
+    width:70px ;
+    color:var(--primarylight-color);
+    font-size:60px;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px dashed var(--primarylight-color);
+    margin-bottom:10px;
+}
+.add-box >p{
+    font-size:20px;
+    font-weight:600;
+    color:var(--primary-color);
+}
+.note  p{
+    color:var(--primary-color);
+    font-size:25px;
+    font-weight: 600 ;
+}
+.note span{
+    color:rgb(105, 105, 105);
+    display:block;
+    margin-top: 5px;
+    font-size: 16px;
+}
+.note .bottom-content{
+   
+    border-top:1.5px solid var(--primarylight-color);
+}
+.bottom-content span{
+    color:var(--primary-color);
+    font-size: 14px;
+    margin-top:0;
+}
+.fa-ellipsis{
+    cursor: pointer;
+    color:var(--primary-color);
+}
+.setting{
+    position: relative;
+}
+.setting .menu{
+    background:var(--secondary-color);
+    position:absolute;
+    bottom:5px; 
+    right:0px;
+    transform:scale(0);
+    transform-origin: bottom right;
+    border-radius:5px;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    transition: all 1.5 ease;
+}
+.setting.show .menu{
+    transform:scale(1);
+}
+.setting .menu div{
+    padding:20px 15px; 
+    height:30px;
+    cursor: pointer;
+    border-radius: 5px;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.menu div:hover{
+    background-color:var(--tertiary-color);
+}
+.menu div i{
+    padding-right: 8px;
+}
+.popup-box{
+    position: fixed;
+    top: 0;
+    left: 0;
+   z-index: 9;
+    height: 100%;
+    width: 100%;
+    background:rgba(0, 0, 0, 0.212);
+}   
+.popup-box .popup{
+    max-width: 400px;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+
+}
+.popup-box .popup, .popup-box{
+    display: none;
+    pointer-events: none; 
+    transition: all 0.55s ease;
+}
+ .popup-box.show,.popup-box .popup{
+    display: block;
+    pointer-events: auto; 
+}
+.popup .content{
+    background: white;
+    border-radius: 5px;
+}  
+.content header{
+    padding:15px 25px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--primarylight-color);
+
+}
+.content header p{
+    font-size:20px;
+    font-weight:700;
+}
+
+.content header i{
+    color:rgb(47, 47, 47);
+    cursor: pointer;
+    font-size:20px;
+    transition: all 0.2s ease;
+}
+.content header i:hover{
+  color:var(--primarylight-color);
+}
+.content form{
+    margin: 20px 25px 35px;
+}
+.content form .row{
+    margin-bottom:10px;
+}
+form .row label{
+    display:block;
+    font-size:18px;
+    font-weight:600;
+    padding:4px 0;
+}
+.content form :where(input, textarea){
+    color:rgb(105, 105, 105);
+    width:100%;
+    height:40px;
+    outline:none;
+    font-size:15px;
+    padding:0 15px;
+    border-radius: 5px;
+    border:1.4px solid #999;
+    padding: 0 15px;
+    border-radius:1px solid #999;
+}
+.content form textarea {
+    height: 150px;
+    resize:none;
+    padding: 10px 15px;
+}
+.content form button {
+    width:100%;
+    height:40px;
+    border-radius: 4px;
+    font-size:16px;
+    border: none;
+    background-color:var(--primarylight-color); 
+    margin-bottom: 25px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+.content form button:hover{
+    background-color:var(--primary-color); 
+    font-weight: 600;
+}
+
