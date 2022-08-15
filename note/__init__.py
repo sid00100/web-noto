@@ -15,3 +15,4 @@ firebase_admin.initialize_app(cred,{
 })
 
 db_ref = db.reference("/")
+db_ref_user = db.reference("/-N9X6TBu9jO-N7_Ci-z5/user")

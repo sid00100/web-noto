@@ -1,6 +1,6 @@
 from flask import render_template, request
 
-from note import app, db_ref
+from note import app, db_ref, db_ref_user
 from note.signup import Signup
 from firebase_admin import auth
 
@@ -28,11 +28,13 @@ def signup():
                     "user": {
                         "username": username,
                         "email": email,
-                        "notes":{
+                        "notes":[
+                            {
                             "title":"",
                             "description":"",
                             "time_of_creation":""
                         }
+                        ]
                     }                    
                 }
                 user = auth.create_user(email=email, password=password)
