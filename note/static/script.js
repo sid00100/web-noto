@@ -11,7 +11,7 @@ const months = ["jan", "feb", "mar", "apr", "may","jun","jul","aug","sep","oct",
 
 let isUpdate = false, updateId;
  
-console.log("qdqkjdnqjdqj")
+
 
 
 
@@ -50,6 +50,7 @@ function showNotes(){
                         </div>
                     </div>`;
         addBox.insertAdjacentHTML("afterend",liTag)
+        console.log(notes, index);
     });
 }
 showNotes()

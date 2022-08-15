@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 :root {
     --first-color: #131a1d;
+    --first-colorfade: #1f2a2f;
     --primary-color: #2F4550;
     --primarylight-color:#586F7C;
     --secondary-color: #F7F7F7;
@@ -11,9 +12,104 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
+    font-weight:900;
+    color:var( --first-color);
 }
 body{
     font-family: 'Nunito', sans-serif;
     background: var(--first-color);
-    margin: 0;  
+    margin: 0; 
+   
+        background: linear-gradient(-45deg, #2F4550, #131a1d,#484848,#586F7C);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+        height: 100vh;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+    
+}
+    /* @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    } */
+.center {
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+}  
+.opacitybox{
+    z-index: -20;
+    position: absolute;
+    width: 300px;
+    background-color:var(--secondary-color);
+    opacity: 0.6;
+    height:80vh;
+    border-radius: 15px;
+  
+}
+.box {
+  
+    padding:60px 30px;
+    height:80vh;
+
+}
+.flexC{
+    display: flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+}
+.placeholder{
+    font-size:11px;
+    margin: 20px 0  1px 2px;
+}
+.label{
+    border-radius:5px;
+   padding:6px;
+   border: solid 1.5px var(--first-color);
+}  
+.submitbtn{
+    margin:30px 0 0 0;
+    padding:7px 5px;
+    background-color:var(--first-color);
+    color:var(--tertiary-color);
+    border-radius:5px;
+    width:100px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size:17px;
+    border: solid 1.5px var(--first-color);
+    transition: transform 0.15s ease-out;
+} 
+.submitbtn:hover{
+    /* transition:width 2s, height 2s; */
+    font-size:16px;
+    font-weight: 900;
+    transition: transform 0.15s ease-out;
+    transform: scale(0.98);
+    background-color: var(--first-color);
+}
+.submitcontainer{
+    height: 100px;
+    padding:0 0 10px 0;
+}
+.center >a{
+    cursor: pointer;
+   margin: 10px 0 0 0; 
+   text-decoration: none;
+   color:var( --first-color);
+}
+.center >a:hover{
+    color:var( --primary-color);
 }
