@@ -1,7 +1,7 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 
 from note import app, db_ref, db_ref_user
-from note.signup import Signup
+from note.signup import Signup, Login
 from firebase_admin import auth
 
 # import firebase_admin
@@ -10,7 +10,7 @@ from firebase_admin import auth
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for("signup"))
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -48,4 +48,5 @@ def signup():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    login = Login()
+    return render_template('login.html', login = login)

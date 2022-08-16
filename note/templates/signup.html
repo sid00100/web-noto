@@ -16,7 +16,7 @@
 
 <body>
     <div class="opacitybox"></div>
-    <form class = "center box" method="post">
+    <form class="center box" method="post">
         {{ form.csrf_token }}
         <div class="username  flexC">
             {{ form.username.label("ENTER USERNAME :",class=" placeholder") }}
@@ -26,14 +26,19 @@
             {{ form.email.label("EMAIL :",class=" placeholder") }}
             {{ form.email(class="label") }}
         </div>
-       <div class="password flexC">
-        {{ form.password.label("ENTER A PASSWORD :",class=" placeholder") }}
-        {{ form.password(class="label") }}
-       </div>
+        <div class="password flexC">
+            {{ form.password.label("ENTER A PASSWORD :",class=" placeholder") }}
+            <!-- {{ form.confirm_password.label("confirm password :",class=" placeholder") }} -->
+            {{ form.password(class="label") }}
+        </div>
+        <div class="flexC">
+            {{ form.confirm_password.label("CONFIRM PASSWORD :",class=" placeholder") }}
+            {{ form.confirm_password(class = "label") }}
+        </div>
         <div class="submitcontainer">
             {{ form.submit(class="submitbtn") }}
         </div>
-        
+
         <a href="#">Already have an account?</a>
     </form>
 
