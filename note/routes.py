@@ -1,4 +1,5 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, session
+import requests
 
 from note import app, db_ref, db_ref_user
 from note.signup import Signup, Login
@@ -28,14 +29,14 @@ def signup():
                     "user": {
                         "username": username,
                         "email": email,
-                        "notes":[
+                        "notes": [
                             {
-                            "title":"",
-                            "description":"",
-                            "time_of_creation":""
-                        }
+                                "title": "",
+                                "description": "",
+                                "time_of_creation": ""
+                            }
                         ]
-                    }                    
+                    }
                 }
                 user = auth.create_user(email=email, password=password)
                 db_ref.push(db_updater)
@@ -50,10 +51,14 @@ def signup():
 def login():
     login = Login()
     if request.method == "POST":
-        email = login.email.data
-        password = login.password.data
         try:
-            login = auth.sign_in_with_email_and_password(email, password)
+            login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
+                "email": login.email.data,
+                "password": login.password.data
+            })
+            json_login_req_session = login_req.json()["localId"]
+            session["local_id"] = json_login_req_session
+            print(session)
         except Exception as e:
             print(e)
-    return render_template('login.html', login = login)
+    return render_template('login.html', login=login)
