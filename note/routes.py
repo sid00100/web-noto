@@ -46,7 +46,14 @@ def signup():
     return render_template('signup.html', form=signup)
 
 
-@app.route('/login')
+@app.route('/login', methods=["GET", "POST"])
 def login():
     login = Login()
+    if request.method == "POST":
+        email = login.email.data
+        password = login.password.data
+        try:
+            login = auth.sign_in_with_email_and_password(email, password)
+        except Exception as e:
+            print(e)
     return render_template('login.html', login = login)

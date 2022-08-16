@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 
 import firebase_admin
 from firebase_admin import credentials, db
