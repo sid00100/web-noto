@@ -11,7 +11,11 @@ from firebase_admin import auth
 
 @app.route('/')
 def index():
-    return redirect(url_for("signup"))
+    return render_template("index.html")
+    # if session["local_id"] is not None:
+    #     return render_template("index.html")
+    # else:
+    #     return redirect(url_for("signup"))
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -25,20 +29,22 @@ def signup():
         print(username, password, email)
         if signup.validate_on_submit:
             try:
+                user = auth.create_user(email=email, password=password)
+
+                login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
+                    "email": email,
+                    "password": password
+                })
+                user_uid = login_req.json()
+
                 db_updater = {
                     "user": {
+                        "firebase_auth_id": user_uid,
                         "username": username,
                         "email": email,
-                        "notes": [
-                            {
-                                "title": "",
-                                "description": "",
-                                "time_of_creation": ""
-                            }
-                        ]
+                        "notes": {}
                     }
                 }
-                user = auth.create_user(email=email, password=password)
                 db_ref.push(db_updater)
 
             except Exception as e:
@@ -61,4 +67,5 @@ def login():
             print(session)
         except Exception as e:
             print(e)
-    return render_template('login.html', login=login)
+    return render_template('index.html', login=login)
+    # return render_template(url_for("index"), login=login)
