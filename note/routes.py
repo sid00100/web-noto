@@ -1,26 +1,23 @@
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, json
 import requests
-
 from note import app, db_ref, db_ref_user
 from note.signup import Signup, Login
 from firebase_admin import auth
 
-# import firebase_admin
-# from firebase_admin import credentials
 
-
+# index
 @app.route('/')
 def index():
-    return render_template("index.html")
-    # if session["local_id"] is not None:
-    #     return render_template("index.html")
-    # else:
-    #     return redirect(url_for("signup"))
+    if session.get("local_id") is not None:
+        return render_template("index.html")
+    else:
+        return redirect(url_for("signup"))
+
+# signup
 
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
-    # bugs to be fixed here
     signup = Signup()
     if request.method == "POST":
         username = signup.username.data
@@ -35,37 +32,58 @@ def signup():
                     "email": email,
                     "password": password
                 })
-                user_uid = login_req.json()
+                user_uid = login_req.json().get("localId")
 
                 db_updater = {
                     "user": {
                         "firebase_auth_id": user_uid,
                         "username": username,
                         "email": email,
-                        "notes": {}
+                        "notes": {
+                            "note_shit": False 
+                        }
                     }
                 }
                 db_ref.push(db_updater)
-
             except Exception as e:
                 print(e)
 
     return render_template('signup.html', form=signup)
 
 
+# login
 @app.route('/login', methods=["GET", "POST"])
 def login():
     login = Login()
-    if request.method == "POST":
+    print(session.get("local_id"))
+    if request.method == "POST" and session.get("local_id") == None:
         try:
             login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
                 "email": login.email.data,
                 "password": login.password.data
             })
-            json_login_req_session = login_req.json()["localId"]
-            session["local_id"] = json_login_req_session
-            print(session)
+
+            session_var = login_req.json()["localId"]
+            session["local_id"] = session_var
+
+            return render_template("index.html")
         except Exception as e:
-            print(e)
-    return render_template('index.html', login=login)
-    # return render_template(url_for("index"), login=login)
+            print("error")
+
+    return render_template("login.html", login=login)
+
+
+# logout
+@app.route("/logout")
+def logout():
+    if session.get("local_id"):
+        session.pop("local_id")
+        return redirect(url_for("signup"))
+    else:
+        return redirect(url_for("signup"))
+
+    
+#edit
+@app.route("/edit<note_id>")
+def edit(note_id):
+    pass 
