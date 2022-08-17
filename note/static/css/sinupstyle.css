@@ -31,7 +31,7 @@ body{
     align-items:center;
     
 }
-    @keyframes gradient {
+    /* @keyframes gradient {
         0% {
             background-position: 0% 50%;
         }
@@ -41,7 +41,7 @@ body{
         100% {
             background-position: 0% 50%;
         }
-    }
+    } */
 .center {
     display: flex;
     flex-direction:column;
@@ -51,17 +51,26 @@ body{
 .opacitybox{
     z-index: -20;
     position: absolute;
-    width: 300px;
+    width: 400px;
     background-color:var(--secondary-color);
-    opacity: 0.6;
-    height:80vh;
+    opacity: 0.4;
+    height:75vh;
     border-radius: 15px;
   
 }
+.opacityboxlogin{
+    z-index: -20;
+    position: absolute;
+    width: 400px;
+    background-color:var(--secondary-color);
+    opacity: 0.4;
+    height:60vh;
+    border-radius: 15px;
+}
 .box {
   
-    padding:60px 30px;
-    height:80vh;
+    padding:60px 10px 0px 10px;
+  
 
 }
 .flexC{
@@ -73,12 +82,29 @@ body{
 .placeholder{
     font-size:11px;
     margin: 20px 0  1px 2px;
+    color: var(--first-color);
 }
 .label{
-    border-radius:5px;
+    border-radius:6px;
    padding:6px;
-   border: solid 1.5px var(--first-color);
+   border: solid 2px var(--first-color);
+   width:270px;
+   height: 45px;
+   background:#131a1d;
+   color:#F7F7F7;
+   outline: none;
 }  
+.label:active{
+    border: solid 2px var(--secondary-color);
+}
+.label:focus{
+    border-bottom: solid 2px var(--secondary-color);
+
+   
+}
+
+   
+
 .submitbtn{
     margin:30px 0 0 0;
     padding:7px 5px;
@@ -112,4 +138,34 @@ body{
 }
 .center >a:hover{
     color:var( --primary-color);
+}
+.upperborder{
+    border-top: 1px solid var(--first-color);
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center;
+    width:350px;
+    margin-top: 50px;
+    
+}
+.upperbordersigup{
+    border-top: 1px solid var(--first-color);
+    height:1px;
+    width:350px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.divider{
+    margin-top: 5px;
+    background-color:var(--first-color);
+    height:40px;
+    width: 1px;
+}
+.equalspace{
+    width: 150px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:10px 10px;
 }
