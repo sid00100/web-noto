@@ -1,9 +1,11 @@
 from flask import Flask
 
 import firebase_admin
-from firebase_admin import credentials, db
-
-
+from firebase_admin import credentials
+from pymongo import MongoClient
+# developement test code
+# id - root
+# pass - uyXTM2DiXx7DrMGy
 
 
 app = Flask(__name__)
@@ -14,5 +16,6 @@ firebase_admin.initialize_app(cred,{
     "databaseURL": "https://note-app-db3be-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
 
-db_ref = db.reference("/")
-db_ref_user = db.reference("/-N9X6TBu9jO-N7_Ci-z5/user")
+dbclient = MongoClient("mongodb+srv://root:uyXTM2DiXx7DrMGy@web-noto-cluster.y31dhww.mongodb.net/?retryWrites=true&w=majority")
+db = dbclient["web-noto"]
+user_collection = db["users"]

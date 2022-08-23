@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, json
 import requests
-from note import app, db_ref, db_ref_user
+from note import app, user_collection
 from note.signup import Signup, Login
 from firebase_admin import auth
 
@@ -13,9 +13,8 @@ def index():
     else:
         return redirect(url_for("signup"))
 
+
 # signup
-
-
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     signup = Signup()
@@ -35,16 +34,12 @@ def signup():
                 user_uid = login_req.json().get("localId")
 
                 db_updater = {
-                    "user": {
-                        "firebase_auth_id": user_uid,
-                        "username": username,
-                        "email": email,
-                        "notes": {
-                            "note_shit": False 
-                        }
-                    }
+                    "firebase_auth_id": user_uid,
+                    "username": username,
+                    "email": email
                 }
-                db_ref.push(db_updater)
+
+                user_collection.insert_one(db_updater)
             except Exception as e:
                 print(e)
 
@@ -82,8 +77,14 @@ def logout():
     else:
         return redirect(url_for("signup"))
 
-    
-#edit
+
+# edit
 @app.route("/edit<note_id>")
 def edit(note_id):
-    pass 
+    pass
+
+# create note
+@app.route("/create-note")
+def create():
+    uid = session["local_id"]
+# date, title, description
