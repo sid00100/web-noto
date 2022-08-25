@@ -4,7 +4,6 @@ import bson
 import requests
 from note import app, user_collection, notes_collection, bcrypt_app
 from note.signup import Signup, Login
-from firebase_admin import auth
 
 
 # index
