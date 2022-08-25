@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, url_for, session, json
+import bcrypt
+import bson
 import requests
-from note import app, user_collection
+from note import app, user_collection, notes_collection, bcrypt_app
 from note.signup import Signup, Login
 from firebase_admin import auth
 
@@ -21,25 +23,26 @@ def signup():
     if request.method == "POST":
         username = signup.username.data
         password = signup.password.data
+        password_hash = bcrypt_app.generate_password_hash(
+            password).decode("utf-8")
         email = signup.email.data
+        insert_login = {
+            "email": email,
+            "username": username,
+            "password": password_hash
+        }
         print(username, password, email)
         if signup.validate_on_submit:
             try:
-                user = auth.create_user(email=email, password=password)
-
-                login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
+                if user_collection.find_one({
                     "email": email,
-                    "password": password
-                })
-                user_uid = login_req.json().get("localId")
-
-                db_updater = {
-                    "firebase_auth_id": user_uid,
-                    "username": username,
-                    "email": email
-                }
-
-                user_collection.insert_one(db_updater)
+                    "username": username
+                }, {"_id": 0, "password": 0}) == {"email": email, "username": username}:
+                    print("hola mf")
+                    return render_template("signup.html", form=signup)
+                else:
+                    user_collection.insert_one(insert_login)
+                    return render_template("login.html")
             except Exception as e:
                 print(e)
 
@@ -53,17 +56,15 @@ def login():
     print(session.get("local_id"))
     if request.method == "POST" and session.get("local_id") == None:
         try:
-            login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
-                "email": login.email.data,
-                "password": login.password.data
-            })
-
-            session_var = login_req.json()["localId"]
-            session["local_id"] = session_var
-
-            return render_template("index.html")
+            email = login.email.data
+            password = login.password.data
+            login_data = user_collection.find_one({"email": email})
+            pw_hash = login_data["password"]
+            if bcrypt_app.check_password_hash(pw_hash, password):
+                session_var = login_data["_id"]
+                return render_template("index.html")
         except Exception as e:
-            print("error")
+            print("password did not match")
 
     return render_template("login.html", login=login)
 
@@ -84,7 +85,23 @@ def edit(note_id):
     pass
 
 # create note
-@app.route("/create-note")
+
+
+@app.route("/create-note", methods=["GET", "POST"])
 def create():
-    uid = session["local_id"]
+    # bson_local_id = session["local_id"].bson
+    bson_local_id = bson.ObjectId(session["local_id"])
+    my_query = {"firebase_auth_id": bson_local_id}
+    update = request.get_json(force=True)
+    print(update)
+    print(notes_collection)
+    create_note = {"$set": {
+        "title": update["title"],
+        "description": update["description"],
+        "date": update["date"]
+    }}
+    print("note-created")
+    print(create_note)
+    notes_collection.update_one(my_query, create_note)
+    return "note-created"
 # date, title, description
