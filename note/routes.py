@@ -1,17 +1,17 @@
-from flask import render_template, request, redirect, url_for, session, json
+from flask import render_template, request, redirect, url_for, session
 import requests
-from note import app, user_collection
+from note import app, psql_db
 from note.signup import Signup, Login
-from firebase_admin import auth
+from note.db import User
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user,login_required, current_user, logout_user
 
 
 # index
 @app.route('/')
+@login_required
 def index():
-    if session.get("local_id") is not None:
-        return render_template("index.html")
-    else:
-        return redirect(url_for("signup"))
+    return render_template("index.html", name = current_user.username)
 
 
 # signup
@@ -21,25 +21,15 @@ def signup():
     if request.method == "POST":
         username = signup.username.data
         password = signup.password.data
+        hassed_password = generate_password_hash(password)
         email = signup.email.data
         print(username, password, email)
         if signup.validate_on_submit:
             try:
-                user = auth.create_user(email=email, password=password)
-
-                login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
-                    "email": email,
-                    "password": password
-                })
-                user_uid = login_req.json().get("localId")
-
-                db_updater = {
-                    "firebase_auth_id": user_uid,
-                    "username": username,
-                    "email": email
-                }
-
-                user_collection.insert_one(db_updater)
+                user_data = User(username, email, hassed_password)
+                psql_db.session.add(user_data)
+                psql_db.session.commit()
+                # may be u will like to add some random data to the database regarding to the current user
             except Exception as e:
                 print(e)
 
@@ -50,20 +40,21 @@ def signup():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     login = Login()
-    print(session.get("local_id"))
-    if request.method == "POST" and session.get("local_id") == None:
+    if request.method == "POST":
         try:
-            login_req = requests.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDctxasRoJa73pfr3rHYiP8NGpMLUDsMOM", json={
-                "email": login.email.data,
-                "password": login.password.data
-            })
-
-            session_var = login_req.json()["localId"]
-            session["local_id"] = session_var
-
-            return render_template("index.html")
+            logging_user_email = login.email.data
+            logging_user_pass = login.password.data
+            logging_user = User.query.filter_by(
+                email=logging_user_email).first()
+            if not logging_user and not check_password_hash(logging_user.password, logging_user_pass):
+                print("invalid user credentials")
+                return redirect(url_for("login"))
+            else:
+                print("successfully logged in")
+                login_user(logging_user)
+                return redirect(url_for("index"))
         except Exception as e:
-            print("error")
+            print(e)
 
     return render_template("login.html", login=login)
 
@@ -84,7 +75,8 @@ def edit(note_id):
     pass
 
 # create note
+@login_required
 @app.route("/create-note")
 def create():
-    uid = session["local_id"]
+    logout_user()
 # date, title, description
